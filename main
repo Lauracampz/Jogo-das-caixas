@@ -1,0 +1,99 @@
+#include <stdio.h>
+
+
+int main()
+{
+    FILE *fp;
+    char arquivo [100];
+    int numFileira,i,j,aux,aux1;
+    int melhorI,melhorJ;
+    int somaLinha [100];
+    int somasPossiveis[100][100];
+    printf("Digite o nome do arquivo de entrada: ");
+    scanf("%s", arquivo);
+    fp = fopen(arquivo,"r"); // Abre arquivo texto para leitura
+    if(!fp)
+    {
+        printf("Erro na abertura do arquivo.\n");
+        return 0;
+    }
+    fscanf(fp,"%i",&numFileira);
+    int piramide [numFileira][numFileira];
+    while(!feof(fp))  // Enquanto não chegar ao final do arquivo
+    {
+        for(i=0; i<numFileira; i++)
+        {
+            for(j=0; j<numFileira; j++)
+            {
+                if(j<=i)
+                {
+                    fscanf(fp,"%i",&piramide[i][j]);
+                }
+                else
+                {
+                    piramide[i][j]=0;
+                }
+            }
+        }
+    }
+   
+
+    for (int linha = 0; linha < numFileira; linha++)
+    {
+        aux=0;
+        for(int coluna = 0; coluna < numFileira; coluna++)
+        {
+            aux+=piramide[linha][coluna];
+        }
+        somaLinha[linha]=aux;
+    }
+
+ 
+    // loop pra criar somas possiveis
+    for (int linha = 0; linha < numFileira; linha++)
+    {
+        for(int coluna = 0; coluna < numFileira; coluna++)
+        {
+            aux1=piramide[linha][coluna];
+
+            if(linha==0){
+                somasPossiveis[linha][coluna]=aux1;
+            }
+            else{
+                for (int linha1 = 0; linha1 < numFileira; linha1++){
+
+                    if(linha1<linha){
+                        aux1+=somaLinha[linha1];
+                        somasPossiveis[linha][coluna]=aux1;
+
+                    }
+
+
+                }
+
+
+            }
+
+        }
+    }
+
+
+ int aux2=somasPossiveis[0][0];
+       for (int linha = 0; linha <= numFileira; linha++)
+    {
+        for(int coluna = 0; coluna <= numFileira; coluna++)
+        {
+            if(aux2<somasPossiveis[linha][coluna]){
+			aux2=somasPossiveis[linha][coluna];
+			melhorI=linha;
+			melhorJ=coluna;
+
+}
+	
+        }
+    }
+
+    printf("Resposta: fileira %i, caixa %i.\n",melhorI+1,melhorJ+1);	
+    fclose(fp);
+    return 0;
+}
